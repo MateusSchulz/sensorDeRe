@@ -5,12 +5,14 @@
 #define TRIGGER 4
 #define ECHO 5
 #define BUZZER 6
+#define LED 7
  
 //Inicializa o sensor nos pinos definidos acima
 Ultrasonic ultrasonic(TRIGGER, ECHO);
  
 void setup(){
   pinMode(BUZZER, OUTPUT);
+  pinMode(LED, OUTPUT);
   Serial.begin(9600);
 }
  
@@ -18,12 +20,14 @@ void loop(){
 
   float cmMsec, inMsec, frequency;
   long microsec = ultrasonic.timing();
+  digitalWrite(LED, LOW);
   cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);
 
   frequency = map(cmMsec, 5, 100, 0, 2000);
   if(frequency < 0) frequency=0;
   if(frequency > 2000) frequency=2000;
-  
+
+   
   Serial.print("F: ");
   Serial.print(frequency);
   Serial.print(" D: ");
@@ -32,5 +36,6 @@ void loop(){
   
   tone(BUZZER, 261.5, 100);
   delay(frequency+100);
+  digitalWrite(LED, HIGH);
   noTone(BUZZER);
 }
